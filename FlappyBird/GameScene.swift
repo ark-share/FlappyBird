@@ -21,6 +21,7 @@ class GameScene: SKScene {
         addChild(scrollNode)
         
         setupGround()
+        setupCloud()
     }
     
     func setupGround() {
@@ -52,6 +53,37 @@ class GameScene: SKScene {
             scrollNode.addChild(sprite)
         }
     }
-    
+    func setupCloud() {
+        // 雲
+        let cloudTexture = SKTexture(imageNamed: "cloud")
+        cloudTexture.filteringMode = SKTextureFilteringMode.Nearest
+        
+        // 必要枚数
+        let needNumber = 2.0 + (frame.size.width / cloudTexture.size().width)
+        
+        // 左にスクロール
+        let moveCloud = SKAction.moveByX(-cloudTexture.size().width, y: 0, duration: 20.0)
+        // 元に戻す
+        let resetCloud = SKAction.moveByX(cloudTexture.size().width, y: 0, duration: 0.0)
+        // 繰り返す
+        let repeatScrollCloud = SKAction.repeatActionForever(SKAction.sequence([moveCloud, resetCloud]))
+        
+        
+        // スプライトを配置
+        for i:CGFloat in CGFloat(0).stride(to:needNumber, by: 1.0) { // to: or through:
+            // 位置表示
+            let sprite = SKSpriteNode(texture: cloudTexture)
+            // 重なりの奥に配置
+            sprite.zPosition = -100
+            
+            //groundSprite.position = CGPoint(x: size.width / 2, y: groundTexture.size().height / 2)
+            sprite.position = CGPoint(x: i * sprite.size.width, y: size.height - cloudTexture.size().height / 2)
+            
+            // アクションを設定
+            sprite.runAction(repeatScrollCloud)
+            //addChild(groundSprite)
+            scrollNode.addChild(sprite)
+        }
+    }
     
 }
